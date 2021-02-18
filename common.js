@@ -28,7 +28,7 @@ handleRequestByPromise = options => {
         if (response && response.statusCode === 200) {
           resolve(body);
         } else {
-          reject(`请求✿✿✿${url}✿✿✿失败`);
+          reject(`请求失败`);
         }
       });
     });
