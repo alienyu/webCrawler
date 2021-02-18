@@ -25,13 +25,16 @@ mapInfo = text => {
 
 async function getSchoolInfo(defaultTotalPages) {
     var schoolInfo = [];
-    for(var i = 0;i < defaultTotalPages;i ++) {
+    var judgeSign = true;
+    for(var i = 0;i < defaultTotalPages;i++) {
+        if(!judgeSign) { break; }
         var curPage = i + 1; //当前页码
         var curUrl = `${wholeWebPath}&pages=${curPage}`;
         //获取当页的html内容
         var body = await handleRequestByPromise({ url: curUrl });
         var $ = cheerio.load(body);
-        if(judgePageExist($)) {
+        var judgeSign = judgePageExist($)
+        if(judgeSign) {
             var schoolList = $(".index1").eq(1).find("li"); // 当页所有学校
             schoolList.map((index, dom) => {
                 var info = {
@@ -61,7 +64,7 @@ async function getSchoolInfo(defaultTotalPages) {
                 })
                 schoolInfo.push(info);
             })
-        } else { break; }
+        }
     }
     return schoolInfo;
 }

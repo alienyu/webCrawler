@@ -27,15 +27,20 @@ mapInfo = text => {
 
 async function getSchoolInfo(defaultTotalPages) {
     var schoolInfo = [];
-    for(var i = 0;i < defaultTotalPages;i ++) {
+    var judgeSign = true;
+    for(var i = 170;i < defaultTotalPages;i++) {
+        if(!judgeSign){break;}
         var curPage = i + 1; //当前页码
         var curUrl = `${wholeWebPath}&PageIndex=${curPage}`;
         //获取当页的html内容
         var body = await handleRequestByPromise({ url: curUrl });
         var $ = cheerio.load(body);
-        if(judgePageExist($)) {
+        var judgeSign = judgePageExist($);
+        if(judgeSign) {
             var schoolList = $(".container>.yahei"); // 当页所有学校
-            schoolList.map((index, dom) => {
+            var schoolListLen = schoolList.length;
+            for(var j = 0;j < schoolListLen; j++) {
+                var dom = schoolList[j];
                 var info = {
                     link: "",
                     name: "",
@@ -50,6 +55,10 @@ async function getSchoolInfo(defaultTotalPages) {
                     email: "",
                 }
                 var link = $(dom).find('a').attr("href");
+                var detailBody = await handleRequestByPromise({ url: link }); //进入详情页面爬电话
+                var $$ = cheerio.load(detailBody);
+                var phone = $$(".container .ctitle:contains('联系方式')").next().text();
+                info.phone = phone;
                 var name = $(dom).find('strong').text();
                 info.link = link;
                 info.name = name;
@@ -62,7 +71,7 @@ async function getSchoolInfo(defaultTotalPages) {
                     }
                 })
                 schoolInfo.push(info);
-            })
+            }
         } else { break; }
     }
     return schoolInfo;
