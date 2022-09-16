@@ -35,6 +35,11 @@ handleRequestByPromise = options => {
   return promise;
 }
 
+readFileSync = path => {
+  var fileStr = fs.readFileSync(path, { encoding: 'utf8' });
+  return fileStr
+}
+
 genExcelFile = (data, file) => {
   var keyList = ["name", "type", "address", "postalCode", "principal", "creater", "artificialPerson", "phone", "mobile", "email", "link"]
   var csvText = "学校名称, 学校类别/学段（指是幼儿园、小学、初中、高中还是培训机构 ）, 地址, 邮编, 校长, 举办者, 法人代表, 电话, 手机, 邮箱, 网址\n";
@@ -65,8 +70,21 @@ genGuangdongExcelFile = (data, file) => {
   fs.writeFileSync(file, csvText);
 }
 
+genByBitExcelFile = (data, file) => {
+  var csvText = "首字母, 词组, 释义\n";
+  Object.keys(data).map(firstAlp => {
+    Object.keys(data[firstAlp]).map(eachWord => {
+      var desc = data[firstAlp][eachWord];
+      csvText += `"${firstAlp}", "${eachWord}", "${desc}"\n`;
+    });
+  });
+  fs.writeFileSync(file, csvText);
+}
+
 module.exports = {
   handleRequestByPromise,
   genExcelFile,
-  genGuangdongExcelFile
+  genGuangdongExcelFile,
+  readFileSync,
+  genByBitExcelFile
 };
