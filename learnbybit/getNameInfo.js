@@ -40,10 +40,9 @@ async function getNameInfo() {
             eachAlpList.map((i, eachWord) => {
                 var word = $(eachWord).find("h3").text();
                 var desc = $(eachWord).find("p").text();
-                nameInfo[key][word] = desc.replace(/\n/g, "");
+                nameInfo[key][word] = desc.replace(/\n/g, "").replace(/,/g, "，").trim().split(/\s+/g).join(" ");
             });
         });
-        console.log("nameInfo", nameInfo);
         return nameInfo;
     }
     // for (var i = 0; i < defaultTotalPages; i++) {

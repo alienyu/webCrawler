@@ -75,7 +75,7 @@ genByBitExcelFile = (data, file) => {
   Object.keys(data).map(firstAlp => {
     Object.keys(data[firstAlp]).map(eachWord => {
       var desc = data[firstAlp][eachWord];
-      csvText += `"${firstAlp}", "${eachWord}", "${desc}"\n`;
+      csvText += `"${firstAlp}", "${eachWord}", ${desc}\n`;
     });
   });
   fs.writeFileSync(file, csvText);
